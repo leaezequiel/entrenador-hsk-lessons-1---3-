@@ -1,0 +1,890 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <!-- Etiqueta vital para que sea responsive en dispositivos móviles -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Entrenador New HSK 3.0</title>
+    
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            background-color: #f4f6f8;
+            display: flex;
+            justify-content: center;
+        }
+
+        #trainer-hsk {
+            box-sizing: border-box;
+            width: 100%;
+            max-width: 820px;
+            margin: 0 auto;
+            padding: 20px;
+            overflow-x: hidden;
+            border: 1px solid #d8d8d8;
+            border-radius: 16px;
+            background: #ffffff;
+            color: #222222;
+            font-family: Arial, sans-serif;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+        }
+
+        #trainer-hsk * {
+            box-sizing: border-box;
+        }
+
+        #trainer-hsk .encabezado {
+            padding: 17px;
+            border-radius: 12px;
+            background: linear-gradient(135deg, #b71c1c, #e53935);
+            color: white;
+            text-align: center;
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        #trainer-hsk .subtitulo {
+            margin-top: 8px;
+            color: #666666;
+            text-align: center;
+            font-size: 14px;
+        }
+
+        #trainer-hsk .configuracion {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+            gap: 12px;
+            margin-top: 18px;
+            padding: 16px;
+            border-radius: 12px;
+            background: #fff3f3;
+        }
+
+        #trainer-hsk .grupo {
+            min-width: 0;
+        }
+
+        #trainer-hsk label {
+            display: block;
+            margin-bottom: 6px;
+            color: #333333;
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        #trainer-hsk select,
+        #trainer-hsk input[type="number"],
+        #trainer-hsk input[type="text"] {
+            display: block;
+            width: 100%;
+            height: 44px;
+            padding: 8px 11px;
+            border: 1px solid #b8b8b8;
+            border-radius: 8px;
+            background: white;
+            color: #222222;
+            font-size: 16px;
+            outline: none;
+        }
+
+        #trainer-hsk select:focus,
+        #trainer-hsk input:focus {
+            border-color: #c62828;
+            box-shadow: 0 0 0 3px rgba(198, 40, 40, 0.15);
+        }
+
+        #trainer-hsk .interruptor {
+            display: flex;
+            align-items: center;
+            min-height: 44px;
+            padding: 8px 10px;
+            border: 1px solid #b8b8b8;
+            border-radius: 8px;
+            background: white;
+        }
+
+        #trainer-hsk .interruptor input {
+            width: 19px;
+            height: 19px;
+            margin: 0 9px 0 0;
+        }
+
+        #trainer-hsk .ayuda {
+            margin-top: 14px;
+            padding: 13px;
+            border-left: 5px solid #c62828;
+            border-radius: 7px;
+            background: #f7f7f7;
+            color: #444444;
+            font-size: 14px;
+            line-height: 1.55;
+        }
+
+        #trainer-hsk .botonera {
+            display: flex;
+            flex-flow: row wrap;
+            gap: 9px;
+            margin-top: 15px;
+        }
+
+        #trainer-hsk button {
+            min-height: 44px;
+            padding: 10px 17px;
+            border: none;
+            border-radius: 9px;
+            color: white;
+            font-size: 15px;
+            font-weight: bold;
+            cursor: pointer;
+            flex: 1 1 auto; /* Ajuste para que los botones se adapten bien */
+        }
+
+        #trainer-hsk button:disabled {
+            cursor: not-allowed;
+            opacity: 0.45;
+        }
+
+        #trainer-hsk .rojo { background: #c62828; }
+        #trainer-hsk .celeste { background: #087ca7; }
+        #trainer-hsk .verde { background: #238636; }
+        #trainer-hsk .azul { background: #0969da; }
+        #trainer-hsk .naranja { background: #c45d00; }
+        #trainer-hsk .gris { background: #626262; }
+
+        #trainer-hsk .panel-juego {
+            display: none;
+        }
+
+        #trainer-hsk .progreso {
+            margin-top: 15px;
+            padding: 11px;
+            border-radius: 9px;
+            background: #f1f1f1;
+            font-size: 15px;
+            line-height: 1.5;
+        }
+
+        #trainer-hsk .instruccion {
+            margin-top: 14px;
+            font-size: 17px;
+            line-height: 1.5;
+        }
+
+        #trainer-hsk .tarjeta {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 210px;
+            margin-top: 13px;
+            padding: 20px;
+            border: 2px solid #c62828;
+            border-radius: 17px;
+            background: #fff8e1;
+            text-align: center;
+        }
+
+        #trainer-hsk .hanzi {
+            max-width: 100%;
+            color: #111111;
+            font-family: "Noto Sans CJK SC", "Microsoft YaHei", "PingFang SC", sans-serif;
+            font-size: clamp(60px, 12vw, 90px);
+            line-height: 1.25;
+            overflow-wrap: anywhere;
+        }
+
+        #trainer-hsk .pinyin {
+            margin-top: 8px;
+            color: #555555;
+            font-size: 24px;
+        }
+
+        #trainer-hsk .unidad {
+            margin-top: 10px;
+            padding: 5px 10px;
+            border-radius: 20px;
+            background: #c62828;
+            color: white;
+            font-size: 13px;
+            font-weight: bold;
+        }
+
+        #trainer-hsk .audio-icono { font-size: 58px; }
+        #trainer-hsk .audio-texto {
+            margin-top: 10px;
+            color: #444444;
+            font-size: 17px;
+            line-height: 1.5;
+        }
+
+        #trainer-hsk .respuesta-contenedor {
+            width: 100%;
+            margin-top: 14px;
+        }
+
+        #trainer-hsk .mensaje {
+            margin-top: 13px;
+            padding: 14px;
+            border-radius: 9px;
+            font-size: 16px;
+            line-height: 1.55;
+        }
+
+        #trainer-hsk .correcto {
+            border: 1px solid #badbcc;
+            background: #d1e7dd;
+            color: #0f5132;
+        }
+
+        #trainer-hsk .incorrecto {
+            border: 1px solid #f5c2c7;
+            background: #f8d7da;
+            color: #842029;
+        }
+
+        #trainer-hsk .advertencia {
+            border: 1px solid #ffecb5;
+            background: #fff3cd;
+            color: #664d03;
+        }
+
+        #trainer-hsk .audio-estado {
+            min-height: 24px;
+            margin-top: 7px;
+            color: #555555;
+            font-size: 13px;
+        }
+
+        #trainer-hsk .resultado-final {
+            margin-top: 15px;
+            padding: 18px;
+            border: 2px solid #c62828;
+            border-radius: 13px;
+            background: #fff8e1;
+            font-size: 18px;
+            line-height: 1.8;
+        }
+
+        #trainer-hsk .error-item {
+            margin-top: 9px;
+            padding: 12px;
+            border-left: 5px solid #dc3545;
+            border-radius: 7px;
+            background: #fff4f4;
+            line-height: 1.55;
+        }
+
+        #trainer-hsk .oculto {
+            display: none !important;
+        }
+
+        /* Ajustes específicos para dispositivos móviles */
+        @media (max-width: 560px) {
+            body {
+                padding: 10px;
+            }
+
+            #trainer-hsk {
+                padding: 15px;
+                border-radius: 12px;
+            }
+
+            #trainer-hsk .configuracion {
+                grid-template-columns: 1fr;
+            }
+
+            #trainer-hsk .botonera {
+                flex-direction: column; /* Apila los botones uno arriba de otro */
+            }
+
+            #trainer-hsk button {
+                width: 100%; /* Botones de lado a lado para fácil acceso táctil */
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div id="trainer-hsk">
+        <div class="encabezado">🇨🇳 New HSK 3.0 · Lecciones 1 a 3</div>
+        <div class="subtitulo">Entrenador visual y auditivo de vocabulario chino</div>
+
+        <div id="panel-configuracion">
+            <div class="configuracion">
+                <div class="grupo">
+                    <label for="unidad-hsk">Lecciones a practicar</label>
+                    <select id="unidad-hsk">
+                        <option value="todas" selected>Lecciones 1, 2 y 3</option>
+                        <option value="1">Solo lección 1</option>
+                        <option value="2">Solo lección 2</option>
+                        <option value="3">Solo lección 3</option>
+                    </select>
+                </div>
+
+                <div class="grupo">
+                    <label for="modo-hsk">Modo de entrenamiento</label>
+                    <select id="modo-hsk">
+                        <option value="visual">Visual</option>
+                        <option value="audio">Auditivo</option>
+                        <option value="mixto" selected>Mixto</option>
+                    </select>
+                </div>
+
+                <div class="grupo">
+                    <label for="preguntas-hsk">Preguntas por ronda</label>
+                    <input id="preguntas-hsk" type="number" min="1" max="49" value="15">
+                </div>
+
+                <div class="grupo">
+                    <label for="velocidad-hsk">Velocidad del audio</label>
+                    <select id="velocidad-hsk">
+                        <option value="0.60">Muy lenta</option>
+                        <option value="0.75" selected>Estudio</option>
+                        <option value="0.90">Natural</option>
+                        <option value="1.00">Completa</option>
+                    </select>
+                </div>
+
+                <div class="grupo">
+                    <label>Ayuda fonética</label>
+                    <div class="interruptor">
+                        <input id="pinyin-hsk" type="checkbox">
+                        <span>Mostrar pinyin</span>
+                    </div>
+                </div>
+
+                <div class="grupo">
+                    <label>Selección</label>
+                    <div class="interruptor">
+                        <input id="sin-repetir-hsk" type="checkbox" checked>
+                        <span>No repetir palabras</span>
+                    </div>
+                </div>
+
+                <div class="grupo">
+                    <label>Audio automático</label>
+                    <div class="interruptor">
+                        <input id="automatico-hsk" type="checkbox">
+                        <span>Reproducir automáticamente</span>
+                    </div>
+                </div>
+            </div>
+
+            <div id="descripcion-modo" class="ayuda"></div>
+
+            <div class="botonera">
+                <button id="boton-prueba-audio" class="celeste" type="button">🔊 Probar audio</button>
+                <button id="boton-comenzar" class="rojo" type="button">▶ Comenzar entrenamiento</button>
+            </div>
+
+            <div id="estado-prueba-audio" class="audio-estado"></div>
+        </div>
+
+        <div id="panel-juego" class="panel-juego">
+            <div id="progreso-hsk" class="progreso"></div>
+            <div id="instruccion-hsk" class="instruccion"></div>
+            <div id="tarjeta-hsk" class="tarjeta"></div>
+
+            <div class="botonera">
+                <button id="boton-escuchar" class="celeste" type="button">🔊 Escuchar</button>
+                <button id="boton-lento" class="gris" type="button">🐢 Repetir lento</button>
+            </div>
+
+            <div id="estado-audio" class="audio-estado"></div>
+
+            <div class="respuesta-contenedor">
+                <label for="respuesta-hsk">Significado en español</label>
+                <input id="respuesta-hsk" type="text" autocomplete="off" placeholder="Escribí la respuesta y presioná ENTER">
+            </div>
+
+            <div class="botonera">
+                <button id="boton-comprobar" class="verde" type="button">✅ Comprobar</button>
+                <button id="boton-siguiente" class="azul" type="button" disabled>Siguiente ➜</button>
+            </div>
+
+            <div id="mensaje-hsk"></div>
+
+            <div class="botonera">
+                <button id="boton-configuracion" class="naranja" type="button">⚙ Volver a configuración</button>
+            </div>
+        </div>
+
+        <div id="panel-resultados" class="oculto">
+            <div id="resultado-hsk"></div>
+            <div id="errores-hsk"></div>
+
+            <div class="botonera">
+                <button id="boton-otra-ronda" class="rojo" type="button">🔄 Otra ronda</button>
+                <button id="boton-reconfigurar" class="naranja" type="button">⚙ Cambiar configuración</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+    (() => {
+        "use strict";
+
+        // Aquí se inyectó el diccionario extraído del Python
+        const vocabulario = [
+            { "hanzi": "你好", "pinyin": "nǐ hǎo", "significado": "hola", "respuestas": ["hola", "buenas"], "unidad": 1 },
+            { "hanzi": "大家", "pinyin": "dàjiā", "significado": "todos / todo el mundo", "respuestas": ["todos", "todas", "todo el mundo", "todos ustedes"], "unidad": 1 },
+            { "hanzi": "好", "pinyin": "hǎo", "significado": "bueno / bien", "respuestas": ["bueno", "buena", "bien"], "unidad": 1 },
+            { "hanzi": "学生", "pinyin": "xuésheng", "significado": "estudiante", "respuestas": ["estudiante", "alumno", "alumna"], "unidad": 1 },
+            { "hanzi": "们", "pinyin": "men", "significado": "sufijo de plural para personas", "respuestas": ["plural", "sufijo plural", "sufijo de plural", "plural para personas"], "unidad": 1 },
+            { "hanzi": "老师", "pinyin": "lǎoshī", "significado": "profesor / maestro", "respuestas": ["profesor", "profesora", "maestro", "maestra", "docente"], "unidad": 1 },
+            { "hanzi": "您", "pinyin": "nín", "significado": "usted, forma respetuosa", "respuestas": ["usted", "usted formal", "usted respetuosamente"], "unidad": 1 },
+            { "hanzi": "你们", "pinyin": "nǐmen", "significado": "ustedes", "respuestas": ["ustedes", "vosotros", "vosotras"], "unidad": 1 },
+            { "hanzi": "谢谢", "pinyin": "xièxie", "significado": "gracias", "respuestas": ["gracias", "muchas gracias", "agradecer"], "unidad": 1 },
+            { "hanzi": "不客气", "pinyin": "bú kèqi", "significado": "de nada", "respuestas": ["de nada", "no hay de que", "no hay de qué"], "unidad": 1 },
+            { "hanzi": "同学", "pinyin": "tóngxué", "significado": "compañero de clase", "respuestas": ["compañero", "compañera", "compañero de clase", "compañera de clase", "estudiante"], "unidad": 1 },
+            { "hanzi": "再见", "pinyin": "zàijiàn", "significado": "adiós / hasta luego", "respuestas": ["adios", "adiós", "hasta luego", "chau", "chao"], "unidad": 1 },
+            { "hanzi": "请问", "pinyin": "qǐngwèn", "significado": "disculpe, una pregunta", "respuestas": ["disculpe", "perdon", "perdón", "una pregunta", "puedo preguntar"], "unidad": 2 },
+            { "hanzi": "你", "pinyin": "nǐ", "significado": "vos / tú", "respuestas": ["vos", "tu", "tú"], "unidad": 2 },
+            { "hanzi": "叫", "pinyin": "jiào", "significado": "llamarse / ser llamado", "respuestas": ["llamarse", "me llamo", "ser llamado", "llamar"], "unidad": 2 },
+            { "hanzi": "什么", "pinyin": "shénme", "significado": "qué / cuál", "respuestas": ["que", "qué", "cual", "cuál"], "unidad": 2 },
+            { "hanzi": "名字", "pinyin": "míngzi", "significado": "nombre", "respuestas": ["nombre"], "unidad": 2 },
+            { "hanzi": "我", "pinyin": "wǒ", "significado": "yo / me", "respuestas": ["yo", "me", "mi"], "unidad": 2 },
+            { "hanzi": "不", "pinyin": "bù", "significado": "no", "respuestas": ["no", "negacion", "negación"], "unidad": 2 },
+            { "hanzi": "是", "pinyin": "shì", "significado": "ser / es", "respuestas": ["ser", "es", "soy"], "unidad": 2 },
+            { "hanzi": "对不起", "pinyin": "duìbuqǐ", "significado": "perdón / lo siento", "respuestas": ["perdon", "perdón", "lo siento", "disculpa", "disculpe"], "unidad": 2 },
+            { "hanzi": "没关系", "pinyin": "méi guānxi", "significado": "no importa / está bien", "respuestas": ["no importa", "esta bien", "está bien", "no pasa nada"], "unidad": 2 },
+            { "hanzi": "没事", "pinyin": "méishì", "significado": "no pasa nada", "respuestas": ["no pasa nada", "no importa", "esta bien", "está bien"], "unidad": 2 },
+            { "hanzi": "很", "pinyin": "hěn", "significado": "muy", "respuestas": ["muy", "bastante"], "unidad": 2 },
+            { "hanzi": "高兴", "pinyin": "gāoxìng", "significado": "contento / feliz", "respuestas": ["contento", "contenta", "feliz", "alegre"], "unidad": 2 },
+            { "hanzi": "认识", "pinyin": "rènshi", "significado": "conocer / conocer a alguien", "respuestas": ["conocer", "conocerse", "conocer a alguien"], "unidad": 2 },
+            { "hanzi": "也", "pinyin": "yě", "significado": "también", "respuestas": ["tambien", "también"], "unidad": 2 },
+            { "hanzi": "人", "pinyin": "rén", "significado": "persona / gente", "respuestas": ["persona", "gente", "ser humano"], "unidad": 3 },
+            { "hanzi": "的", "pinyin": "de", "significado": "partícula posesiva o atributiva", "respuestas": ["particula posesiva", "partícula posesiva", "posesivo", "de", "particula atributiva", "partícula atributiva"], "unidad": 3 },
+            { "hanzi": "中国", "pinyin": "Zhōngguó", "significado": "China", "respuestas": ["china"], "unidad": 3 },
+            { "hanzi": "法国", "pinyin": "Fǎguó", "significado": "Francia", "respuestas": ["francia"], "unidad": 3 },
+            { "hanzi": "中文", "pinyin": "Zhōngwén", "significado": "idioma chino / chino", "respuestas": ["chino", "idioma chino", "lengua china"], "unidad": 3 },
+            { "hanzi": "这", "pinyin": "zhè", "significado": "esto / este / esta", "respuestas": ["esto", "este", "esta"], "unidad": 3 },
+            { "hanzi": "谁", "pinyin": "shéi / shuí", "significado": "quién", "respuestas": ["quien", "quién"], "unidad": 3 },
+            { "hanzi": "女朋友", "pinyin": "nǚpéngyou", "significado": "novia", "respuestas": ["novia", "pareja"], "unidad": 3 },
+            { "hanzi": "哪", "pinyin": "nǎ", "significado": "cuál / qué", "respuestas": ["cual", "cuál", "que", "qué"], "unidad": 3 },
+            { "hanzi": "国", "pinyin": "guó", "significado": "país", "respuestas": ["pais", "país", "nacion", "nación"], "unidad": 3 },
+            { "hanzi": "她", "pinyin": "tā", "significado": "ella", "respuestas": ["ella"], "unidad": 3 },
+            { "hanzi": "泰国", "pinyin": "Tàiguó", "significado": "Tailandia", "respuestas": ["tailandia"], "unidad": 3 },
+            { "hanzi": "喂", "pinyin": "wèi", "significado": "hola / diga, al teléfono", "respuestas": ["hola", "diga", "hola por telefono", "hola por teléfono"], "unidad": 3 },
+            { "hanzi": "姐姐", "pinyin": "jiějie", "significado": "hermana mayor", "respuestas": ["hermana mayor", "hermana grande"], "unidad": 3 },
+            { "hanzi": "工作", "pinyin": "gōngzuò", "significado": "trabajo / trabajar", "respuestas": ["trabajo", "trabajar", "empleo"], "unidad": 3 },
+            { "hanzi": "还", "pinyin": "hái", "significado": "todavía / aún", "respuestas": ["todavia", "todavía", "aun", "aún"], "unidad": 3 },
+            { "hanzi": "忙", "pinyin": "máng", "significado": "ocupado", "respuestas": ["ocupado", "ocupada", "atareado", "atareada"], "unidad": 3 },
+            { "hanzi": "吗", "pinyin": "ma", "significado": "partícula interrogativa", "respuestas": ["particula", "partícula", "particula interrogativa", "partícula interrogativa", "particula de pregunta", "partícula de pregunta", "pregunta"], "unidad": 3 },
+            { "hanzi": "对", "pinyin": "duì", "significado": "correcto / sí", "respuestas": ["correcto", "correcta", "si", "sí", "exacto"], "unidad": 3 },
+            { "hanzi": "太", "pinyin": "tài", "significado": "demasiado / muy", "respuestas": ["demasiado", "muy", "excesivamente"], "unidad": 3 },
+            { "hanzi": "我们", "pinyin": "wǒmen", "significado": "nosotros / nosotras", "respuestas": ["nosotros", "nosotras"], "unidad": 3 },
+            { "hanzi": "想", "pinyin": "xiǎng", "significado": "extrañar / querer / pensar", "respuestas": ["extrañar", "extranar", "querer", "pensar", "tener ganas"], "unidad": 3 }
+        ];
+
+        const app = document.getElementById("trainer-hsk");
+        const buscar = selector => app.querySelector(selector);
+
+        const panelConfiguracion = buscar("#panel-configuracion");
+        const panelJuego = buscar("#panel-juego");
+        const panelResultados = buscar("#panel-resultados");
+
+        const selectorUnidad = buscar("#unidad-hsk");
+        const selectorModo = buscar("#modo-hsk");
+        const selectorPreguntas = buscar("#preguntas-hsk");
+        const selectorVelocidad = buscar("#velocidad-hsk");
+        const casillaPinyin = buscar("#pinyin-hsk");
+        const casillaSinRepetir = buscar("#sin-repetir-hsk");
+        const casillaAutomatico = buscar("#automatico-hsk");
+
+        const descripcionModo = buscar("#descripcion-modo");
+        const progreso = buscar("#progreso-hsk");
+        const instruccion = buscar("#instruccion-hsk");
+        const tarjeta = buscar("#tarjeta-hsk");
+        const campoRespuesta = buscar("#respuesta-hsk");
+        const mensaje = buscar("#mensaje-hsk");
+        const estadoAudio = buscar("#estado-audio");
+        const estadoPrueba = buscar("#estado-prueba-audio");
+
+        const botonComprobar = buscar("#boton-comprobar");
+        const botonSiguiente = buscar("#boton-siguiente");
+        const botonEscuchar = buscar("#boton-escuchar");
+        const botonLento = buscar("#boton-lento");
+
+        const estado = {
+            vocabularioFiltrado: [],
+            ronda: [],
+            indice: 0,
+            aciertos: 0,
+            errores: [],
+            respondida: false,
+            modoPregunta: "",
+            configuracion: {},
+            reproducciones: 0
+        };
+
+        const audio = {
+            sintetizador: window.speechSynthesis,
+            voces: [],
+            pronunciacion: null,
+            temporizador: null,
+            contador: 0
+        };
+
+        function cargarVoces() {
+            audio.voces = audio.sintetizador.getVoices() || [];
+        }
+
+        cargarVoces();
+        audio.sintetizador.addEventListener("voiceschanged", cargarVoces);
+
+        function buscarVozChina() {
+            cargarVoces();
+            const prioridades = ["zh-CN", "zh_CN", "zh-Hans-CN", "zh-Hans", "zh"];
+            for (const idioma of prioridades) {
+                const voz = audio.voces.find(elemento =>
+                    elemento.lang.toLowerCase().replace("_", "-") === idioma.toLowerCase().replace("_", "-")
+                );
+                if (voz) return voz;
+            }
+            return audio.voces.find(elemento => elemento.lang.toLowerCase().startsWith("zh")) || null;
+        }
+
+        function reproducir(texto, velocidad = null, elementoEstado = estadoAudio) {
+            if (!("speechSynthesis" in window) || !("SpeechSynthesisUtterance" in window)) {
+                elementoEstado.textContent = "⚠️ El navegador no ofrece síntesis de voz.";
+                return;
+            }
+
+            const velocidadFinal = velocidad ?? Number(estado.configuracion.velocidad || selectorVelocidad.value || 0.75);
+            audio.contador += 1;
+            const solicitud = audio.contador;
+
+            if (audio.temporizador) {
+                clearTimeout(audio.temporizador);
+                audio.temporizador = null;
+            }
+
+            const iniciar = () => {
+                if (solicitud !== audio.contador) return;
+                audio.sintetizador.resume();
+
+                const pronunciacion = new SpeechSynthesisUtterance(texto);
+                const vozChina = buscarVozChina();
+
+                pronunciacion.lang = "zh-CN";
+                pronunciacion.rate = velocidadFinal;
+                pronunciacion.pitch = 1;
+                pronunciacion.volume = 1;
+
+                if (vozChina) pronunciacion.voice = vozChina;
+                audio.pronunciacion = pronunciacion;
+
+                pronunciacion.onstart = () => {
+                    estado.reproducciones += 1;
+                    elementoEstado.textContent = "🔊 Reproduciendo · vez " + estado.reproducciones;
+                };
+
+                pronunciacion.onend = () => {
+                    if (audio.pronunciacion === pronunciacion) audio.pronunciacion = null;
+                    elementoEstado.textContent = "✅ Audio finalizado. Podés repetirlo.";
+                };
+
+                pronunciacion.onerror = evento => {
+                    if (evento.error === "interrupted") return;
+                    elementoEstado.textContent = "⚠️ Error de audio: " + evento.error;
+                };
+
+                audio.sintetizador.speak(pronunciacion);
+            };
+
+            if (audio.sintetizador.speaking || audio.sintetizador.pending || audio.pronunciacion) {
+                audio.sintetizador.cancel();
+                audio.pronunciacion = null;
+                audio.temporizador = setTimeout(iniciar, 180);
+            } else {
+                iniciar();
+            }
+        }
+
+        function detenerAudio() {
+            audio.contador += 1;
+            if (audio.temporizador) {
+                clearTimeout(audio.temporizador);
+                audio.temporizador = null;
+            }
+            audio.sintetizador.cancel();
+            audio.pronunciacion = null;
+        }
+
+        function escapar(texto) {
+            const elemento = document.createElement("div");
+            elemento.textContent = texto;
+            return elemento.innerHTML;
+        }
+
+        function normalizar(texto) {
+            return texto.trim().toLowerCase().normalize("NFD")
+                .replace(/[\u0300-\u036f]/g, "")
+                .replace(/[^\p{L}\p{N}\s]/gu, " ")
+                .replace(/\s+/g, " ")
+                .trim();
+        }
+
+        function respuestaCorrecta(respuesta, opciones) {
+            const respuestaNormalizada = normalizar(respuesta);
+            return opciones.some(opcion => normalizar(opcion) === respuestaNormalizada);
+        }
+
+        function mezclar(elementos) {
+            const copia = [...elementos];
+            for (let posicion = copia.length - 1; posicion > 0; posicion -= 1) {
+                const aleatoria = Math.floor(Math.random() * (posicion + 1));
+                [copia[posicion], copia[aleatoria]] = [copia[aleatoria], copia[posicion]];
+            }
+            return copia;
+        }
+
+        function palabraActual() {
+            return estado.ronda[estado.indice];
+        }
+
+        function mostrarPanel(nombre) {
+            panelConfiguracion.style.display = nombre === "configuracion" ? "block" : "none";
+            panelJuego.style.display = nombre === "juego" ? "block" : "none";
+            panelResultados.classList.toggle("oculto", nombre !== "resultados");
+        }
+
+        function actualizarDescripcionModo() {
+            const descripciones = {
+                visual: `<b>Modo visual:</b> muestra el carácter chino y pregunta su significado en español.`,
+                audio: `<b>Modo auditivo:</b> oculta el carácter hasta que respondas. Podés escuchar la palabra todas las veces que necesites.`,
+                mixto: `<b>Modo mixto:</b> cada pregunta aparece aleatoriamente como ejercicio visual o auditivo.`
+            };
+            descripcionModo.innerHTML = descripciones[selectorModo.value];
+        }
+
+        function actualizarCantidadDisponible() {
+            const unidad = selectorUnidad.value;
+            const disponibles = unidad === "todas" ? vocabulario.length : vocabulario.filter(palabra => palabra.unidad === Number(unidad)).length;
+            selectorPreguntas.max = disponibles;
+            if (Number(selectorPreguntas.value) > disponibles) {
+                selectorPreguntas.value = disponibles;
+            }
+        }
+
+        selectorModo.addEventListener("change", actualizarDescripcionModo);
+        selectorUnidad.addEventListener("change", actualizarCantidadDisponible);
+        actualizarDescripcionModo();
+        actualizarCantidadDisponible();
+
+        function comenzarEntrenamiento() {
+            detenerAudio();
+            const unidad = selectorUnidad.value;
+            estado.vocabularioFiltrado = unidad === "todas" ? [...vocabulario] : vocabulario.filter(palabra => palabra.unidad === Number(unidad));
+            const maximo = estado.vocabularioFiltrado.length;
+            const cantidadSolicitada = Math.max(1, Math.min(maximo, Number(selectorPreguntas.value) || 10));
+            selectorPreguntas.value = cantidadSolicitada;
+
+            estado.configuracion = {
+                unidad: unidad,
+                modo: selectorModo.value,
+                preguntas: cantidadSolicitada,
+                velocidad: Number(selectorVelocidad.value),
+                pinyin: casillaPinyin.checked,
+                sinRepetir: casillaSinRepetir.checked,
+                automatico: casillaAutomatico.checked
+            };
+
+            if (estado.configuracion.sinRepetir) {
+                estado.ronda = mezclar(estado.vocabularioFiltrado).slice(0, cantidadSolicitada);
+            } else {
+                estado.ronda = Array.from({ length: cantidadSolicitada }, () => estado.vocabularioFiltrado[Math.floor(Math.random() * estado.vocabularioFiltrado.length)]);
+            }
+
+            estado.indice = 0;
+            estado.aciertos = 0;
+            estado.errores = [];
+            estado.respondida = false;
+            estado.reproducciones = 0;
+
+            mostrarPanel("juego");
+            mostrarPregunta();
+        }
+
+        function mostrarPregunta() {
+            detenerAudio();
+            estado.respondida = false;
+            estado.reproducciones = 0;
+            campoRespuesta.value = "";
+            campoRespuesta.disabled = false;
+            botonComprobar.disabled = false;
+            botonSiguiente.disabled = true;
+            mensaje.innerHTML = "";
+            estadoAudio.textContent = "";
+
+            if (estado.configuracion.modo === "mixto") {
+                estado.modoPregunta = Math.random() < 0.5 ? "visual" : "audio";
+            } else {
+                estado.modoPregunta = estado.configuracion.modo;
+            }
+
+            const palabra = palabraActual();
+
+            progreso.innerHTML = `
+                <b>Pregunta:</b> ${estado.indice + 1}/${estado.configuracion.preguntas} &nbsp; | &nbsp;
+                <b>Modo:</b> ${estado.modoPregunta.toUpperCase()} &nbsp; | &nbsp;
+                <b>Unidad:</b> ${palabra.unidad} &nbsp; | &nbsp;
+                <b>Pinyin:</b> ${estado.configuracion.pinyin ? "visible" : "oculto"}
+            `;
+
+            if (estado.modoPregunta === "visual") {
+                instruccion.innerHTML = `👀 Observá el carácter y escribí su significado en español.`;
+                mostrarCaracter(palabra);
+            } else {
+                instruccion.innerHTML = `🎧 Escuchá la palabra y escribí su significado. El carácter se revelará cuando respondas.`;
+                tarjeta.innerHTML = `
+                    <div class="audio-icono">🎧</div>
+                    <div class="audio-texto">Carácter oculto.<br>Presioná <b>Escuchar</b> todas las veces que necesites.</div>
+                    <div class="unidad">Lección ${palabra.unidad}</div>
+                `;
+                if (estado.configuracion.automatico) {
+                    setTimeout(() => reproducir(palabra.hanzi), 350);
+                }
+            }
+
+            setTimeout(() => campoRespuesta.focus(), 100);
+        }
+
+        function mostrarCaracter(palabra) {
+            tarjeta.innerHTML = `
+                <div class="hanzi">${escapar(palabra.hanzi)}</div>
+                ${estado.configuracion.pinyin ? `<div class="pinyin">${escapar(palabra.pinyin)}</div>` : ""}
+                <div class="unidad">Lección ${palabra.unidad}</div>
+            `;
+        }
+
+        function comprobarRespuesta() {
+            if (estado.respondida) {
+                siguientePregunta();
+                return;
+            }
+
+            const respuesta = campoRespuesta.value.trim();
+            if (!respuesta) {
+                mensaje.innerHTML = `<div class="mensaje advertencia">⚠️ Escribí una respuesta antes de comprobar.</div>`;
+                campoRespuesta.focus();
+                return;
+            }
+
+            const palabra = palabraActual();
+            estado.respondida = true;
+            campoRespuesta.disabled = true;
+            botonComprobar.disabled = true;
+            botonSiguiente.disabled = false;
+
+            if (respuestaCorrecta(respuesta, palabra.respuestas)) {
+                estado.aciertos += 1;
+                mensaje.innerHTML = `<div class="mensaje correcto">✅ <b>¡Correcto!</b><br>${escapar(palabra.hanzi)} significa <b>${escapar(palabra.significado)}</b>.</div>`;
+            } else {
+                estado.errores.push({
+                    hanzi: palabra.hanzi,
+                    pinyin: palabra.pinyin,
+                    significado: palabra.significado,
+                    respuesta: respuesta,
+                    modo: estado.modoPregunta,
+                    unidad: palabra.unidad
+                });
+                mensaje.innerHTML = `<div class="mensaje incorrecto">❌ <b>Incorrecto.</b><br>Tu respuesta: <b>${escapar(respuesta)}</b><br>Respuesta correcta: <b>${escapar(palabra.significado)}</b>.</div>`;
+            }
+
+            if (estado.modoPregunta === "audio") {
+                mostrarCaracter(palabra);
+            }
+        }
+
+        function siguientePregunta() {
+            if (!estado.respondida) {
+                comprobarRespuesta();
+                return;
+            }
+            estado.indice += 1;
+            if (estado.indice < estado.configuracion.preguntas) {
+                mostrarPregunta();
+            } else {
+                mostrarResultados();
+            }
+        }
+
+        function mostrarResultados() {
+            detenerAudio();
+            const cantidad = estado.configuracion.preguntas;
+            const precision = cantidad > 0 ? (estado.aciertos / cantidad * 100).toFixed(1) : "0.0";
+            const resultado = buscar("#resultado-hsk");
+            const errores = buscar("#errores-hsk");
+
+            resultado.innerHTML = `
+                <div class="resultado-final">
+                    <div style="font-size: 22px; font-weight: bold; margin-bottom: 8px;">📊 Resultado de la ronda</div>
+                    <b>Preguntas:</b> ${cantidad}<br>
+                    <b>Aciertos:</b> ${estado.aciertos}<br>
+                    <b>Errores:</b> ${estado.errores.length}<br>
+                    <b>Precisión:</b> ${precision}%
+                </div>
+            `;
+
+            if (estado.errores.length === 0) {
+                errores.innerHTML = `<div class="mensaje correcto">🏆 ¡Ronda perfecta! No hubo errores.</div>`;
+            } else {
+                errores.innerHTML = `
+                    <h3>📚 Palabras para repasar</h3>
+                    ${estado.errores.map((error, indice) => `
+                        <div class="error-item">
+                            <b>${indice + 1}. ${escapar(error.hanzi)}</b>${estado.configuracion.pinyin ? `(${escapar(error.pinyin)})` : ""}
+                            <br>Lección: <b>${error.unidad}</b>
+                            <br>Significado: <b>${escapar(error.significado)}</b>
+                            <br>Tu respuesta: ${escapar(error.respuesta)}
+                            <br>Modo: ${escapar(error.modo)}
+                        </div>
+                    `).join("")}
+                `;
+            }
+
+            mostrarPanel("resultados");
+        }
+
+        buscar("#boton-prueba-audio").addEventListener("click", () => {
+            estado.reproducciones = 0;
+            reproducir("你好", Number(selectorVelocidad.value), estadoPrueba);
+        });
+
+        buscar("#boton-comenzar").addEventListener("click", comenzarEntrenamiento);
+        botonEscuchar.addEventListener("click", () => reproducir(palabraActual().hanzi));
+        botonLento.addEventListener("click", () => reproducir(palabraActual().hanzi, 0.55));
+        botonComprobar.addEventListener("click", comprobarRespuesta);
+        botonSiguiente.addEventListener("click", siguientePregunta);
+
+        campoRespuesta.addEventListener("keydown", evento => {
+            if (evento.key !== "Enter") return;
+            evento.preventDefault();
+            if (estado.respondida) {
+                siguientePregunta();
+            } else {
+                comprobarRespuesta();
+            }
+        });
+
+        buscar("#boton-configuracion").addEventListener("click", () => {
+            detenerAudio();
+            mostrarPanel("configuracion");
+        });
+
+        buscar("#boton-otra-ronda").addEventListener("click", comenzarEntrenamiento);
+
+        buscar("#boton-reconfigurar").addEventListener("click", () => {
+            detenerAudio();
+            mostrarPanel("configuracion");
+        });
+
+        window.addEventListener("beforeunload", detenerAudio);
+
+    })();
+    </script>
+</body>
+</html>
